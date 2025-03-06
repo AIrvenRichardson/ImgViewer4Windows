@@ -21,7 +21,7 @@ int main(int argc, char *argv[])
 
     Texture2D drawTarget = { 0 };
     bool newImage = true;
-    float imageScale = 0.5f;
+    float imageScale = 1.0f;
     float xoffset = 0.0f;
     float yoffset = 0.0f;
 
