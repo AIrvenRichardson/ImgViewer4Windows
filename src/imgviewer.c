@@ -24,6 +24,7 @@ int main(int argc, char *argv[])
     //A ton of variables for the image
     Texture2D drawTarget = { 0 };
     float imageScale = 1.0f;
+    float lastScale = 0.0f;
     float xoffset = 0.0f;
     float yoffset = 0.0f;
 
@@ -39,12 +40,14 @@ int main(int argc, char *argv[])
     if (IsImageValid(image))
     {
         drawTarget = LoadTextureFromImage(image);
-        SetWindowSize(minimum(image.width+50, GetMonitorWidth(0)), minimum(image.height+25,GetMonitorHeight(0)));
+        SetWindowSize(minimum(image.width+50, GetMonitorWidth(0)-50), minimum(image.height+25,GetMonitorHeight(0)-25));
     }
 
     while (!WindowShouldClose())
     {
         //UPDATE
+        lastScale = imageScale;
+
         if (image.format == 7)
         {
             frameCounter++;
@@ -67,6 +70,21 @@ int main(int argc, char *argv[])
         imageScale += (float)GetMouseWheelMove()*0.05f;   // Image scale control
         if (imageScale <= 0.1f) imageScale = 0.1f;
         else if (imageScale >= 5) imageScale = 5;
+
+        if (imageScale - lastScale > 0)
+        {
+            float xrat = screenWidth/2 - GetMouseX();
+            float yrat = screenHeight/2 - GetMouseY();
+            xoffset += (imageScale - lastScale) * xrat;
+            yoffset += (imageScale - lastScale) * yrat;
+        }
+        else if (imageScale - lastScale < 0)
+        {
+            float xrat = -1*screenWidth/2 + GetMouseX();
+            float yrat = -1*screenHeight/2 + GetMouseY();
+            xoffset -= (imageScale - lastScale) * xrat;
+            yoffset -= (imageScale - lastScale) * yrat;           
+        }
 
         if (IsMouseButtonDown(MOUSE_BUTTON_MIDDLE))
         {
