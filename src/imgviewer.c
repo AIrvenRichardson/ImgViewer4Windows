@@ -39,7 +39,7 @@ int main(int argc, char *argv[])
     if (IsImageValid(image))
     {
         drawTarget = LoadTextureFromImage(image);
-        SetWindowSize(minimum(image.width, GetMonitorWidth(0)), minimum(image.height,GetMonitorHeight(0)));
+        SetWindowSize(minimum(image.width+50, GetMonitorWidth(0)), minimum(image.height+25,GetMonitorHeight(0)));
     }
 
     while (!WindowShouldClose())
