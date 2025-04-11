@@ -18,6 +18,7 @@ int main(int argc, char *argv[])
 
     //Make room for an image
     Image image = { 0 };
+    char* errmsg = "";
 
     if (argc > 1) image = LoadImage(argv[1]); 
 
@@ -32,10 +33,19 @@ int main(int argc, char *argv[])
     unsigned int nextFrameDataOffset = 0;
     int animFrames = 0;
     int currentAnimFrame = 0;
-    int frameDelay = 3;
+    int frameDelay = 5;
     int frameCounter = 0;
-    
-    if (image.format == 7) image = LoadImageAnim(argv[1], &animFrames); //Reload image as an animation if it's a gif (7)
+
+    if (image.format == 7)
+    {
+        if (GetFileLength(argv[1]) > 10000000){
+            errmsg = "This file is too large! (>10mb)";   
+        }
+        else
+        {
+            image = LoadImageAnim(argv[1], &animFrames); //Reload image as an animation if it's a gif (7)
+        }
+    }
 
     if (IsImageValid(image))
     {
@@ -100,8 +110,9 @@ int main(int argc, char *argv[])
             if (drawTarget.id > 0) 
             {
                 DrawTextureEx(drawTarget, (Vector2){ screenWidth/2 - (float)drawTarget.width*imageScale/2 + xoffset , screenHeight/2 - (float)drawTarget.height*imageScale/2 + yoffset}, 0.0f, imageScale, WHITE);
+                DrawText(errmsg, screenWidth/2 - 160, screenHeight/2, 20, BLACK); 
             }
-            else
+            else 
             {
                 DrawText("No Image/Image was invalid...", screenWidth/2 - 160, screenHeight/2, 20, BLACK);
             }
